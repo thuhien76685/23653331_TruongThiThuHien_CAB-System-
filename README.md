@@ -294,49 +294,6 @@ flowchart LR
     UC09 --> UC08
 ```
 
-## 7.3. Nhóm Use Case theo tác nhân
-
-### Khách hàng
-
-- Đăng ký / Đăng nhập.
-- Đặt xe.
-- Quản lý chuyến đi.
-- Thanh toán.
-- Theo dõi hành trình.
-- Hỗ trợ khẩn cấp.
-- Đánh giá chuyến đi.
-- Quản lý hỗ trợ.
-
-### Tài xế
-
-- Đăng ký / Đăng nhập.
-- Tìm và ghép tài xế.
-- Quản lý chuyến đi.
-- Theo dõi hành trình.
-- Hỗ trợ khẩn cấp.
-- Quản lý tài xế.
-
-### Nhân viên vận hành
-
-- Quản lý chuyến đi.
-- Theo dõi hành trình.
-- Hỗ trợ khẩn cấp.
-- Quản lý tài xế.
-- Quản lý hỗ trợ.
-
-### Ban giám đốc
-
-- Xem báo cáo.
-
-### Nhà cung cấp thanh toán
-
-- Thanh toán.
-
-### Nhà cung cấp dịch vụ thông báo
-
-- Gửi thông báo.
-
----
 
 # Bước 8: Đặc tả Use Case
 
