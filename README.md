@@ -38,62 +38,43 @@
 
 #### d.1. Khách hàng (Customer)
 
-- Đăng ký và đăng nhập.
-- Cập nhật thông tin cá nhân.
-- Nhập điểm đón, điểm đến và chọn loại xe.
+- Đăng ký, đăng nhập.
 - Đặt xe.
 - Theo dõi chuyến đi.
-- Xem thông tin tài xế và thời gian dự kiến đến.
+- Thanh toán.
 - Xem lịch sử chuyến đi.
-- Xem số tiền cần thanh toán và thanh toán.
-- Đánh giá tài xế sau chuyến đi.
-- Gửi yêu cầu hỗ trợ hoặc SOS khi cần.
-
+- Đánh giá chuyến đi.
+- Gửi hỗ trợ/SOS.
 #### d.2. Tài xế (Driver)
 
-- Đăng ký tài khoản hoặc được nhân viên tạo tài khoản.
-- Cập nhật thông tin cá nhân và phương tiện.
-- Chuyển sang trạng thái sẵn sàng nhận chuyến.
-- Nhận thông báo khi có chuyến mới.
-- Chấp nhận hoặc từ chối chuyến.
+- Đăng ký, đăng nhập.
+- Cập nhật thông tin và phương tiện.
+- Nhận và xử lý chuyến.
 - Cập nhật trạng thái chuyến.
-- Cung cấp vị trí để hệ thống tìm tài xế phù hợp.
-- Sử dụng chức năng hỗ trợ khẩn cấp khi cần.
+- Gửi hỗ trợ/SOS.
 
 #### d.3. Nhân viên vận hành (Operation Staff)
 
-- Quản lý khách hàng.
 - Quản lý tài xế và phương tiện.
-- Quản lý các chuyến đi.
-- Theo dõi các chuyến đang diễn ra.
-- Kiểm tra trạng thái tài xế.
-- Hỗ trợ xử lý chuyến bị lỗi.
-- Tra cứu lịch sử giao dịch.
-- Theo dõi hoạt động của hệ thống.
+- Theo dõi chuyến đi.
+- Xử lý yêu cầu hỗ trợ.
+- Theo dõi hoạt động hệ thống.
 
 #### d.4. Ban giám đốc (Management)
 
-- Theo dõi số lượng chuyến.
-- Theo dõi doanh thu.
-- Theo dõi tỷ lệ hoàn thành và tỷ lệ hủy.
-- Theo dõi hiệu quả hoạt động của tài xế.
-- Đưa ra định hướng phát triển hệ thống.
-
+- Xem số lượng chuyến.
+- Xem doanh thu.
+- Xem tỷ lệ hoàn thành và hủy.
+- Xem hiệu quả tài xế.
 #### d.5. Nhà cung cấp thanh toán (Payment Provider)
 
-- Xử lý giao dịch thanh toán điện tử.
-- Trả kết quả giao dịch về hệ thống CAB.
-- Hỗ trợ kết quả thanh toán thành công hoặc thất bại.
-- CAB không lưu trực tiếp thông tin nhạy cảm của thẻ hoặc tài khoản thanh toán.
-
+- Xử lý thanh toán điện tử.
+- Trả kết quả giao dịch.
 #### d.6. Nhà cung cấp dịch vụ thông báo (Notification Provider)
 
-- Gửi thông báo khi khách hàng tạo yêu cầu đặt xe.
-- Thông báo khi tài xế nhận chuyến.
-- Thông báo khi tài xế đến điểm đón.
-- Thông báo khi chuyến hoàn thành.
-- Thông báo kết quả thanh toán.
-- Thông báo các thay đổi của chuyến đi.
+- Gửi thông báo chuyến đi.
+- Gửi thông báo thanh toán.
+- Trả kết quả gửi thông báo.
 
 ---
 
