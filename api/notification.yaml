@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Notification Module
+  version: 1.0.0
+  description: Quản lý việc gửi thông báo đến người dùng.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Notification
+
+paths:
+  /notifications:
+    post:
+      tags:
+        - Notification
+      summary: Gửi thông báo
+      operationId: sendNotification
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      responses:
+        '200':
+          description: Đã ghi nhận kết quả gửi thông báo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationResponse'
+        '500':
+          description: Gửi thông báo thất bại
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC08
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    NotificationRequest:
+      type: object
+      required:
+        - recipient
+        - content
+      properties:
+        recipient:
+          type: string
+          description: Người nhận thông báo, ví dụ mã khách hàng hoặc tài xế.
+        eventType:
+          type: string
+          description: Loại sự kiện phát sinh thông báo (theo BR-NOTI-01 / mục 10.8).
+          enum:
+            - booking_received
+            - driver_matched
+            - driver_arrived
+            - trip_completed
+            - payment_result
+            - trip_update
+            - sos_alert
+        content:
+          type: string
+    NotificationResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - sent
+            - failed
+        message:
+          type: string
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
