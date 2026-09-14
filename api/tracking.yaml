@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Tracking Module
+  version: 1.0.0
+  description: Theo dõi vị trí và hành trình của chuyến đi.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Tracking
+
+paths:
+  /trips/{tripId}/tracking:
+    get:
+      tags:
+        - Tracking
+      summary: Theo dõi hành trình
+      operationId: trackTrip
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TripId'
+      responses:
+        '200':
+          description: Hiển thị trạng thái, tài xế, vị trí và thời gian dự kiến đến
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingResponse'
+        '404':
+          description: Không tìm thấy chuyến đang theo dõi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Tracking
+      summary: Cập nhật vị trí tài xế
+      operationId: updateDriverLocation
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TripId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationRequest'
+      responses:
+        '200':
+          description: Cập nhật vị trí thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingResponse'
+        '400':
+          description: Vị trí không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC07
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    TripId:
+      name: tripId
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    LocationRequest:
+      type: object
+      required:
+        - location
+      properties:
+        location:
+          type: string
+          description: Vị trí hiện tại của tài xế, dạng latitude,longitude.
+          example: 10.8231,106.6297
+    TrackingResponse:
+      type: object
+      properties:
+        tripId:
+          type: string
+        status:
+          type: string
+          enum:
+            - accepted
+            - arrived
+            - in_progress
+            - completed
+            - cancelled
+        driverId:
+          type: string
+        location:
+          type: string
+          description: Vị trí hiện tại nếu hệ thống nhận được.
+          example: 10.8231,106.6297
+        eta:
+          type: integer
+          description: Thời gian dự kiến còn lại, tính bằng phút.
+          example: 8
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
