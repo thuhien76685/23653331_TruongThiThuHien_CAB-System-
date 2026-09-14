@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Safety Module
+  version: 1.0.0
+  description: Xử lý các yêu cầu an toàn và khẩn cấp (SOS).
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Safety
+
+paths:
+  /sos:
+    post:
+      tags:
+        - Safety
+      summary: Gửi yêu cầu hỗ trợ khẩn cấp
+      description: Tạo yêu cầu SOS và tự động đưa vào hàng đợi hỗ trợ để nhân viên vận hành tiếp nhận, xử lý qua /support (UC12).
+      operationId: createSOS
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SOSRequest'
+      responses:
+        '201':
+          description: Tạo yêu cầu SOS thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SOSResponse'
+        '400':
+          description: Thông tin SOS không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC09
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SOSRequest:
+      type: object
+      required:
+        - tripId
+      properties:
+        tripId:
+          type: string
+        location:
+          type: string
+          nullable: true
+          description: Vị trí nếu hệ thống lấy được; có thể để trống khi không lấy được vị trí.
+          example: 10.8231,106.6297
+    SOSResponse:
+      type: object
+      properties:
+        sosId:
+          type: string
+        supportId:
+          type: string
+          description: Mã yêu cầu hỗ trợ tương ứng để NV vận hành tiếp nhận và xử lý qua /support/{supportId} (UC12).
+        tripId:
+          type: string
+        location:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+            - created
+            - processing
+            - resolved
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
