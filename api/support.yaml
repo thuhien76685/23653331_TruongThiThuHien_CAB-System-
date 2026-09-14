@@ -1,0 +1,180 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Support Module
+  version: 1.0.0
+  description: Tiếp nhận và giải quyết yêu cầu hỗ trợ, khiếu nại.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Support
+
+paths:
+  /support:
+    get:
+      tags:
+        - Support
+      summary: Xem danh sách yêu cầu hỗ trợ
+      operationId: getSupportRequests
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Danh sách yêu cầu hỗ trợ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupportRequest'
+    post:
+      tags:
+        - Support
+      summary: Gửi yêu cầu hỗ trợ
+      operationId: createSupportRequest
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportRequestInput'
+      responses:
+        '201':
+          description: Tạo yêu cầu hỗ trợ thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportRequest'
+        '400':
+          description: Thông tin hỗ trợ không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC12
+
+  /support/{supportId}:
+    get:
+      tags:
+        - Support
+      summary: Xem chi tiết yêu cầu hỗ trợ
+      operationId: getSupportRequest
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SupportId'
+      responses:
+        '200':
+          description: Thông tin yêu cầu hỗ trợ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportRequest'
+        '404':
+          description: Không tìm thấy yêu cầu hỗ trợ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Support
+      summary: Xử lý yêu cầu hỗ trợ
+      operationId: updateSupportRequest
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SupportId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportUpdate'
+      responses:
+        '200':
+          description: Cập nhật kết quả xử lý thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportRequest'
+        '400':
+          description: Thiếu hoặc sai thông tin xử lý
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Không tìm thấy yêu cầu hỗ trợ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC12
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    SupportId:
+      name: supportId
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    SupportRequestInput:
+      type: object
+      required:
+        - type
+        - content
+      properties:
+        type:
+          type: string
+          example: Khiếu nại chuyến đi
+        content:
+          type: string
+    SupportRequest:
+      allOf:
+        - $ref: '#/components/schemas/SupportRequestInput'
+        - type: object
+          properties:
+            supportId:
+              type: string
+            tripId:
+              type: string
+            requesterId:
+              type: string
+            status:
+              type: string
+              enum:
+                - pending
+                - processing
+                - resolved
+            result:
+              type: string
+    SupportUpdate:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: string
+        status:
+          type: string
+          enum:
+            - processing
+            - resolved
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
