@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Authentication Module
+  version: 1.0.0
+  description: Quản lý đăng ký, đăng nhập tài khoản.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Authentication
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Đăng ký tài khoản
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Tài khoản được tạo thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Thông tin đăng ký không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Tài khoản đã tồn tại
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC01
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Đăng nhập
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Thông tin đăng nhập không đúng
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC01
+
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - name
+        - phone
+        - password
+        - role
+      properties:
+        name:
+          type: string
+          example: Nguyễn Văn A
+        phone:
+          type: string
+          example: '0901234567'
+        password:
+          type: string
+          format: password
+          example: '123456'
+        role:
+          type: string
+          description: Vai trò người đăng ký
+          enum:
+            - customer
+            - driver
+    LoginRequest:
+      type: object
+      required:
+        - phone
+        - password
+      properties:
+        phone:
+          type: string
+          example: '0901234567'
+        password:
+          type: string
+          format: password
+          example: '123456'
+    AuthResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Đăng nhập thành công
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiJ9...
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
