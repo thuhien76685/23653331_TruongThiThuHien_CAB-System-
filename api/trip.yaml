@@ -1,0 +1,172 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Trip Module
+  version: 1.0.0
+  description: Quản lý thông tin, trạng thái và cước phí chuyến đi.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Trip
+
+paths:
+  /trips:
+    get:
+      tags:
+        - Trip
+      summary: Xem danh sách / lịch sử chuyến đi
+      description: Khách hàng xem lịch sử chuyến đi của mình (lọc theo customerId); tài xế xem chuyến đã thực hiện (lọc theo driverId); nhân viên vận hành xem các chuyến đang diễn ra hoặc theo trạng thái (lọc theo status).
+      operationId: listTrips
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: customerId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: driverId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - accepted
+              - arrived
+              - in_progress
+              - completed
+              - cancelled
+      responses:
+        '200':
+          description: Danh sách chuyến đi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trip'
+    x-use-case: UC04
+
+  /trips/{tripId}/status:
+    put:
+      tags:
+        - Trip
+      summary: Cập nhật trạng thái chuyến đi
+      description: Tài xế cập nhật tiến trình chuyến (arrived, in_progress, completed). Khách hàng có thể gọi endpoint này để hủy chuyến (status=cancelled) theo luồng ngoại lệ UC04 2.1.
+      operationId: updateTripStatus
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TripId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripStatusRequest'
+      responses:
+        '200':
+          description: Cập nhật trạng thái chuyến thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+        '400':
+          description: Trạng thái không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC04
+
+  /trips/{tripId}/fare:
+    get:
+      tags:
+        - Trip
+      summary: Tính cước chuyến đi
+      operationId: calculateFare
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TripId'
+      responses:
+        '200':
+          description: Tính cước thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FareResponse'
+        '404':
+          description: Không có bảng giá phù hợp, chuyển cho nhân viên vận hành xử lý
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC05
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    TripId:
+      name: tripId
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    TripStatusRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - accepted
+            - arrived
+            - in_progress
+            - completed
+            - cancelled
+    Trip:
+      type: object
+      properties:
+        tripId:
+          type: string
+        bookingId:
+          type: string
+        driverId:
+          type: string
+        status:
+          type: string
+          enum:
+            - accepted
+            - arrived
+            - in_progress
+            - completed
+            - cancelled
+    FareResponse:
+      type: object
+      properties:
+        tripId:
+          type: string
+        amount:
+          type: number
+          format: double
+          example: 85000
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
