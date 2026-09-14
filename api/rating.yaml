@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Rating Module
+  version: 1.0.0
+  description: Quản lý việc đánh giá dịch vụ chuyến đi.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Rating
+
+paths:
+  /trips/{tripId}/ratings:
+    post:
+      tags:
+        - Rating
+      summary: Đánh giá chuyến đi
+      operationId: rateTrip
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TripId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingRequest'
+      responses:
+        '201':
+          description: Đánh giá được lưu thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+        '400':
+          description: Điểm đánh giá không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC11
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    TripId:
+      name: tripId
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    RatingRequest:
+      type: object
+      required:
+        - score
+      properties:
+        score:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+    Rating:
+      allOf:
+        - $ref: '#/components/schemas/RatingRequest'
+        - type: object
+          properties:
+            tripId:
+              type: string
+            driverId:
+              type: string
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
