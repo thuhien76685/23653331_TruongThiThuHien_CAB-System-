@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Report Module
+  version: 1.0.0
+  description: Xuất thống kê và báo cáo hoạt động hệ thống.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Report
+
+paths:
+  /reports:
+    get:
+      tags:
+        - Report
+      summary: Xem báo cáo
+      operationId: getReports
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Báo cáo hoạt động của hệ thống
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '404':
+          description: Chưa có dữ liệu báo cáo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC13
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Report:
+      type: object
+      properties:
+        totalTrips:
+          type: integer
+          example: 1200
+        revenue:
+          type: number
+          format: double
+          example: 85000000
+        completionRate:
+          type: number
+          format: double
+          example: 0.92
+        cancellationRate:
+          type: number
+          format: double
+          example: 0.08
+        driverPerformance:
+          type: array
+          items:
+            type: object
+            properties:
+              driverId:
+                type: string
+              completedTrips:
+                type: integer
+              averageRating:
+                type: number
+                format: double
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
