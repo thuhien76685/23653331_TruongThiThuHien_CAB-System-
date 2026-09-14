@@ -1,0 +1,164 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Driver Module
+  version: 1.0.0
+  description: Quản lý danh sách và hồ sơ thông tin tài xế.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Driver
+
+paths:
+  /drivers:
+    get:
+      tags:
+        - Driver
+      summary: Xem danh sách tài xế
+      operationId: getDrivers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Danh sách tài xế
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+    post:
+      tags:
+        - Driver
+      summary: Thêm tài xế
+      operationId: createDriver
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverRequest'
+      responses:
+        '201':
+          description: Thêm tài xế thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '400':
+          description: Thông tin tài xế không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC10
+
+  /drivers/{driverId}:
+    get:
+      tags:
+        - Driver
+      summary: Xem chi tiết tài xế
+      operationId: getDriver
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DriverId'
+      responses:
+        '200':
+          description: Thông tin tài xế
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '404':
+          description: Không tìm thấy tài xế
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Driver
+      summary: Cập nhật thông tin tài xế
+      operationId: updateDriver
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DriverId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverRequest'
+      responses:
+        '200':
+          description: Cập nhật tài xế thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '400':
+          description: Thông tin tài xế không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Không tìm thấy tài xế
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC10
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    DriverId:
+      name: driverId
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    DriverRequest:
+      type: object
+      required:
+        - name
+        - phone
+        - vehicle
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        vehicle:
+          type: string
+        status:
+          type: string
+          enum:
+            - ready
+            - busy
+            - inactive
+    Driver:
+      allOf:
+        - $ref: '#/components/schemas/DriverRequest'
+        - type: object
+          properties:
+            driverId:
+              type: string
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
