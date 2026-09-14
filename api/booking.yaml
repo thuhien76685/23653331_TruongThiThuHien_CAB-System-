@@ -1,0 +1,223 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Booking Module
+  version: 1.0.0
+  description: Quản lý đặt xe và ghép nối tài xế.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Booking
+
+paths:
+  /bookings:
+    post:
+      tags:
+        - Booking
+      summary: Đặt xe
+      operationId: createBooking
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+      responses:
+        '201':
+          description: Tạo yêu cầu đặt xe thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: Thông tin đặt xe không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Khách hàng đang có chuyến chưa hoàn thành
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC02
+
+  /bookings/{bookingId}:
+    get:
+      tags:
+        - Booking
+      summary: Xem trạng thái đặt xe
+      description: Dùng để theo dõi tiến trình ghép tài xế (pending/searching/matched/cancelled) vì việc tài xế phản hồi diễn ra bất đồng bộ qua endpoint riêng.
+      operationId: getBooking
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BookingId'
+      responses:
+        '200':
+          description: Thông tin đặt xe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: Không tìm thấy yêu cầu đặt xe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC02
+
+  /bookings/{bookingId}/matching:
+    post:
+      tags:
+        - Booking
+      summary: Tìm và ghép tài xế
+      operationId: matchDriver
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BookingId'
+      responses:
+        '200':
+          description: Hệ thống tìm và ghép tài xế
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchingResponse'
+        '404':
+          description: Không có tài xế phù hợp
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC03
+
+  /bookings/{bookingId}/matching/response:
+    post:
+      tags:
+        - Booking
+      summary: Tài xế phản hồi yêu cầu nhận chuyến
+      operationId: driverMatchingResponse
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BookingId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchingResponseRequest'
+      responses:
+        '200':
+          description: Đã ghi nhận phản hồi của tài xế
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchingResponse'
+        '400':
+          description: Phản hồi không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC03
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    BookingId:
+      name: bookingId
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    BookingRequest:
+      type: object
+      required:
+        - pickup
+        - destination
+        - vehicleType
+      properties:
+        pickup:
+          type: string
+          example: Đại học Công nghiệp TP.HCM
+        destination:
+          type: string
+          example: Sân bay Tân Sơn Nhất
+        vehicleType:
+          type: string
+          enum:
+            - car4
+            - car7
+          example: car4
+    Booking:
+      allOf:
+        - $ref: '#/components/schemas/BookingRequest'
+        - type: object
+          properties:
+            bookingId:
+              type: string
+              example: BK001
+            status:
+              type: string
+              enum:
+                - pending
+                - searching
+                - matched
+                - cancelled
+                - completed
+              example: pending
+            driverId:
+              type: string
+              description: Có giá trị khi chuyến đã được ghép tài xế.
+    MatchingResponse:
+      type: object
+      properties:
+        bookingId:
+          type: string
+          example: BK001
+        driverId:
+          type: string
+          example: TX001
+        status:
+          type: string
+          enum:
+            - matched
+            - searching
+            - no_driver
+          example: matched
+        message:
+          type: string
+    MatchingResponseRequest:
+      type: object
+      required:
+        - driverId
+        - response
+      properties:
+        driverId:
+          type: string
+          example: TX001
+        response:
+          type: string
+          enum:
+            - accepted
+            - rejected
+          example: accepted
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
