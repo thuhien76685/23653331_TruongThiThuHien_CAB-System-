@@ -1,0 +1,89 @@
+openapi: 3.0.0
+info:
+  title: CAB API - Payment Module
+  version: 1.0.0
+  description: Quản lý các giao dịch thanh toán cho chuyến đi.
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Payment
+
+paths:
+  /payments:
+    post:
+      tags:
+        - Payment
+      summary: Thanh toán chuyến đi
+      operationId: createPayment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: Đã xử lý thanh toán
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        '400':
+          description: Thông tin thanh toán không hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '502':
+          description: Nhà cung cấp thanh toán không xử lý được giao dịch điện tử
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    x-use-case: UC06
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    PaymentRequest:
+      type: object
+      required:
+        - tripId
+        - method
+      properties:
+        tripId:
+          type: string
+        method:
+          type: string
+          enum:
+            - cash
+            - electronic
+    PaymentResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        tripId:
+          type: string
+        status:
+          type: string
+          enum:
+            - success
+            - failed
+        message:
+          type: string
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+          example: INVALID_DATA
+        message:
+          type: string
+          example: Thông tin không hợp lệ
