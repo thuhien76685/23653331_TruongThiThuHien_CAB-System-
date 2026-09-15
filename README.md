@@ -185,19 +185,20 @@ quadrantChart
 
 | STT | Chức năng | Mô tả ngắn | Actor chính/phụ |
 |:---:|---|---|---|
-| **1** | **Đăng ký / Đăng nhập** | Tạo tài khoản, đăng nhập và xác thực người dùng. | Khách hàng, Tài xế |
-| **2** | **Đặt xe** | Nhập điểm đón, điểm đến, chọn loại xe và tạo yêu cầu. | Khách hàng |
+| **1** | **Đăng ký** | Tạo tài khoản cho khách hàng hoặc tài xế. | Khách hàng, Tài xế |
+| **2** | **Đăng nhập** | Xác thực tài khoản để sử dụng hệ thống. | Khách hàng, Tài xế |
+| **3** | **Đặt xe** | Nhập điểm đón, điểm đến, chọn loại xe và tạo yêu cầu. | Khách hàng |
 | **4** | **Tìm và ghép tài xế** | Tìm tài xế phù hợp và gửi yêu cầu nhận chuyến. | Hệ thống, Tài xế |
-| **3** | **Quản lý chuyến đi** | Nhận chuyến, cập nhật trạng thái, hoàn thành hoặc hủy chuyến. | Tài xế, Khách hàng, NV vận hành |
-| **5** | **Tính cước** | Tính số tiền khách hàng cần thanh toán. | Hệ thống |
-| **6** | **Thanh toán** | Thanh toán tiền mặt hoặc thanh toán điện tử. | Khách hàng, Nhà cung cấp thanh toán |
-| **7** | **Theo dõi hành trình** | Hiển thị trạng thái và vị trí tài xế trong chuyến đi. | Khách hàng, Tài xế, NV vận hành |
-| **8** | **Gửi thông báo** | Gửi thông báo về các sự kiện quan trọng của chuyến và thanh toán. | Hệ thống, Nhà cung cấp thông báo |
-| **9** | **Hỗ trợ khẩn cấp** | Gửi yêu cầu SOS và thông tin vị trí khi có sự cố. | Khách hàng, Tài xế, NV vận hành |
-| **10** | **Quản lý tài xế** | Quản lý hồ sơ, phương tiện và trạng thái tài xế. | NV vận hành, Tài xế |
-| **11** | **Đánh giá chuyến đi** | Khách hàng chấm điểm và gửi phản hồi sau chuyến. | Khách hàng |
-| **12** | **Quản lý hỗ trợ** | Tiếp nhận và xử lý chuyến lỗi, yêu cầu hỗ trợ và giao dịch cần kiểm tra. | NV vận hành |
-| **13** | **Xem báo cáo** | Theo dõi số lượng chuyến, doanh thu, tỷ lệ hoàn thành/hủy và hiệu quả tài xế. | Ban giám đốc |
+| **5** | **Quản lý chuyến đi** | Nhận chuyến, cập nhật trạng thái, hoàn thành hoặc hủy chuyến. | Tài xế, Khách hàng, NV vận hành |
+| **6** | **Tính cước** | Tính số tiền khách hàng cần thanh toán. | Hệ thống |
+| **7** | **Thanh toán** | Thanh toán tiền mặt hoặc thanh toán điện tử. | Khách hàng, Nhà cung cấp thanh toán |
+| **8** | **Theo dõi hành trình** | Hiển thị trạng thái và vị trí tài xế trong chuyến đi. | Khách hàng, Tài xế, NV vận hành |
+| **9** | **Gửi thông báo** | Gửi thông báo về các sự kiện quan trọng của chuyến và thanh toán. | Hệ thống, Nhà cung cấp thông báo |
+| **10** | **Hỗ trợ khẩn cấp** | Gửi yêu cầu SOS và thông tin vị trí khi có sự cố. | Khách hàng, Tài xế, NV vận hành |
+| **11** | **Quản lý tài xế** | Quản lý hồ sơ, phương tiện và trạng thái tài xế. | NV vận hành, Tài xế |
+| **12** | **Đánh giá chuyến đi** | Khách hàng chấm điểm và gửi phản hồi sau chuyến. | Khách hàng |
+| **13** | **Quản lý hỗ trợ** | Tiếp nhận và xử lý chuyến lỗi, yêu cầu hỗ trợ và giao dịch cần kiểm tra. | NV vận hành |
+| **14** | **Xem báo cáo** | Theo dõi số lượng chuyến, doanh thu, tỷ lệ hoàn thành/hủy và hiệu quả tài xế. | Ban giám đốc |
 
 ---
 
@@ -227,85 +228,112 @@ flowchart LR
     TB["Nhà cung cấp thông báo"]
 
     subgraph CAB["HỆ THỐNG CAB"]
-        UC01(("UC01 Đăng ký / Đăng nhập"))
-        UC02(("UC02 Đặt xe"))
-        UC03(("UC03 Tìm và ghép tài xế"))
-        UC04(("UC04 Quản lý chuyến đi"))
-        UC05(("UC05 Tính cước"))
-        UC06(("UC06 Thanh toán"))
-        UC07(("UC07 Theo dõi hành trình"))
-        UC08(("UC08 Gửi thông báo"))
-        UC09(("UC09 Hỗ trợ khẩn cấp"))
-        UC10(("UC10 Quản lý tài xế"))
-        UC11(("UC11 Đánh giá chuyến đi"))
-        UC12(("UC12 Quản lý hỗ trợ"))
-        UC13(("UC13 Xem báo cáo"))
+        UC01(("UC01 Đăng ký"))
+        UC02(("UC02 Đăng nhập"))
+        UC03(("UC03 Đặt xe"))
+        UC04(("UC04 Tìm và ghép tài xế"))
+        UC05(("UC05 Quản lý chuyến đi"))
+        UC06(("UC06 Tính cước"))
+        UC07(("UC07 Thanh toán"))
+        UC08(("UC08 Theo dõi hành trình"))
+        UC09(("UC09 Gửi thông báo"))
+        UC10(("UC10 Hỗ trợ khẩn cấp"))
+        UC11(("UC11 Quản lý tài xế"))
+        UC12(("UC12 Đánh giá chuyến đi"))
+        UC13(("UC13 Quản lý hỗ trợ"))
+        UC14(("UC14 Xem báo cáo"))
     end
 
     KH --> UC01
     KH --> UC02
-    KH --> UC04
-    KH --> UC06
+    KH --> UC03
+    KH --> UC05
     KH --> UC07
-    KH --> UC09
-    KH --> UC11
+    KH --> UC08
+    KH --> UC10
     KH --> UC12
+    KH --> UC13
 
     TX --> UC01
-    TX --> UC03
+    TX --> UC02
     TX --> UC04
-    TX --> UC07
-    TX --> UC09
+    TX --> UC05
+    TX --> UC08
     TX --> UC10
+    TX --> UC11
 
-    NV --> UC04
-    NV --> UC07
-    NV --> UC09
+    NV --> UC05
+    NV --> UC08
     NV --> UC10
-    NV --> UC12
+    NV --> UC11
+    NV --> UC13
 
-    BGĐ --> UC13
-    TT --> UC06
-    TB --> UC08
+    BGĐ --> UC14
+    TT --> UC07
+    TB --> UC09
 
-    UC02 --> UC03
-    UC04 --> UC05
-    UC04 --> UC08
-    UC06 --> UC08
-    UC09 --> UC08
+    UC03 --> UC04
+    UC05 --> UC06
+    UC05 --> UC09
+    UC07 --> UC09
+    UC10 --> UC09
 ```
 
 
 # Bước 8: Đặc tả Use Case
 
-## 8.1. UC01 - Đăng ký / Đăng nhập
+## 8.1. UC01 - Đăng ký
 
 | Thành phần | Nội dung |
 |---|---|
 | **Tác nhân chính** | Khách hàng hoặc Tài xế |
 | **Tác nhân phụ** | Hệ thống |
-| **Mục đích** | Tạo tài khoản và xác thực người dùng. |
-| **Tiền điều kiện** | Người dùng chưa đăng nhập. |
-| **Hậu điều kiện** | Tài khoản được tạo hoặc người dùng đăng nhập thành công. |
+| **Mục đích** | Tạo tài khoản cho người dùng. |
+| **Tiền điều kiện** | Người dùng chưa có tài khoản trên hệ thống. |
+| **Hậu điều kiện** | Tài khoản được tạo thành công. |
 
 ### Luồng chính
 
-1. Người dùng chọn đăng ký hoặc đăng nhập.
-2. Hệ thống hiển thị giao diện tương ứng.
-3. Người dùng nhập thông tin tài khoản.
-4. Hệ thống kiểm tra thông tin.
-5. Hệ thống tạo tài khoản hoặc xác thực đăng nhập.
-6. Hệ thống thông báo kết quả và cho phép người dùng sử dụng chức năng phù hợp.
+| Người dùng | Hệ thống |
+|---|---|
+| 1. Người dùng chọn chức năng đăng ký. | 2. Hệ thống hiển thị giao diện đăng ký. |
+| 3. Người dùng nhập thông tin đăng ký. | 4. Hệ thống kiểm tra thông tin đăng ký. |
+|  | 5. Hệ thống tạo tài khoản. |
+|  | 6. Hệ thống thông báo đăng ký thành công. |
 
 ### Luồng thay thế / ngoại lệ
 
-- **4.1 Thông tin đăng ký không hợp lệ:** Hệ thống thông báo lỗi và yêu cầu nhập lại.
-- **4.2 Tài khoản đã tồn tại:** Hệ thống thông báo và yêu cầu sử dụng thông tin khác.
-- **5.1 Thông tin đăng nhập không đúng:** Hệ thống thông báo lỗi và yêu cầu đăng nhập lại.
+- **4.1 Thông tin đăng ký không hợp lệ:** Hệ thống thông báo lỗi và yêu cầu người dùng nhập lại thông tin.
+- **4.2 Tài khoản đã tồn tại:** Hệ thống thông báo tài khoản đã tồn tại và yêu cầu sử dụng thông tin khác.
 
 ---
 
-## 8.2. UC02 - Đặt xe
+## 8.2. UC02 - Đăng nhập
+
+| Thành phần | Nội dung |
+|---|---|
+| **Tác nhân chính** | Khách hàng hoặc Tài xế |
+| **Tác nhân phụ** | Hệ thống |
+| **Mục đích** | Xác thực tài khoản để người dùng sử dụng hệ thống. |
+| **Tiền điều kiện** | Người dùng đã có tài khoản và chưa đăng nhập. |
+| **Hậu điều kiện** | Người dùng đăng nhập thành công và được phép sử dụng chức năng phù hợp với vai trò. |
+
+### Luồng chính
+
+| Người dùng | Hệ thống |
+|---|---|
+| 1. Người dùng chọn chức năng đăng nhập. | 2. Hệ thống hiển thị giao diện đăng nhập. |
+| 3. Người dùng nhập thông tin đăng nhập. | 4. Hệ thống kiểm tra thông tin đăng nhập. |
+|  | 5. Hệ thống xác thực tài khoản. |
+|  | 6. Hệ thống thông báo đăng nhập thành công và cho phép sử dụng chức năng phù hợp. |
+
+### Luồng thay thế / ngoại lệ
+
+- **4.1 Thông tin đăng nhập không đúng:** Hệ thống thông báo lỗi và yêu cầu người dùng nhập lại thông tin đăng nhập.
+
+---
+
+## 8.3. UC03 - Đặt xe
 
 | Thành phần | Nội dung |
 |---|---|
@@ -323,7 +351,7 @@ flowchart LR
 | 3. Khách hàng nhập điểm đến. | 4. Hệ thống tiếp nhận điểm đến. |
 | 5. Khách hàng chọn loại xe. | 6. Hệ thống kiểm tra thông tin đặt xe. |
 | 7. Khách hàng xác nhận đặt xe. | 8. Hệ thống tạo yêu cầu đặt xe. |
-|  | 9. Hệ thống chuyển sang UC03 - Tìm và ghép tài xế. |
+|  | 9. Hệ thống chuyển sang UC04 - Tìm và ghép tài xế. |
 
 ### Luồng thay thế / ngoại lệ
 
@@ -332,7 +360,7 @@ flowchart LR
 
 ---
 
-## 8.3. UC03 - Tìm và ghép tài xế
+## 8.4. UC04 - Tìm và ghép tài xế
 
 | Thành phần | Nội dung |
 |---|---|
@@ -360,7 +388,7 @@ flowchart LR
 
 ---
 
-## 8.4. UC04 - Quản lý chuyến đi
+## 8.5. UC05 - Quản lý chuyến đi
 
 | Thành phần | Nội dung |
 |---|---|
@@ -384,11 +412,11 @@ flowchart LR
 ### Luồng thay thế / ngoại lệ
 
 - **2.1 Khách hàng hủy chuyến:** Hệ thống cập nhật chuyến thành hủy.
-- **5.1 Chuyến gặp lỗi:** Hệ thống chuyển yêu cầu sang UC12 - Quản lý hỗ trợ.
+- **5.1 Chuyến gặp lỗi:** Hệ thống chuyển yêu cầu sang UC13 - Quản lý hỗ trợ.
 
 ---
 
-## 8.5. UC05 - Tính cước
+## 8.6. UC06 - Tính cước
 
 | Thành phần | Nội dung |
 |---|---|
@@ -411,7 +439,7 @@ flowchart LR
 
 ---
 
-## 8.6. UC06 - Thanh toán
+## 8.7. UC07 - Thanh toán
 
 | Thành phần | Nội dung |
 |---|---|
@@ -438,7 +466,7 @@ flowchart LR
 
 ---
 
-## 8.7. UC07 - Theo dõi hành trình
+## 8.8. UC08 - Theo dõi hành trình
 
 | Thành phần | Nội dung |
 |---|---|
@@ -462,7 +490,7 @@ flowchart LR
 
 ---
 
-## 8.8. UC08 - Gửi thông báo
+## 8.9. UC09 - Gửi thông báo
 
 | Thành phần | Nội dung |
 |---|---|
@@ -487,7 +515,7 @@ flowchart LR
 
 ---
 
-## 8.9. UC09 - Hỗ trợ khẩn cấp
+## 8.10. UC10 - Hỗ trợ khẩn cấp
 
 | Thành phần | Nội dung |
 |---|---|
@@ -512,7 +540,7 @@ flowchart LR
 
 ---
 
-## 8.10. UC10 - Quản lý tài xế
+## 8.11. UC11 - Quản lý tài xế
 
 | Thành phần | Nội dung |
 |---|---|
@@ -537,7 +565,7 @@ flowchart LR
 
 ---
 
-## 8.11. UC11 - Đánh giá chuyến đi
+## 8.12. UC12 - Đánh giá chuyến đi
 
 | Thành phần | Nội dung |
 |---|---|
@@ -562,7 +590,7 @@ flowchart LR
 
 ---
 
-## 8.12. UC12 - Quản lý hỗ trợ
+## 8.13. UC13 - Quản lý hỗ trợ
 
 | Thành phần | Nội dung |
 |---|---|
@@ -589,7 +617,7 @@ flowchart LR
 
 ---
 
-## 8.13. UC13 - Xem báo cáo
+## 8.14. UC14 - Xem báo cáo
 
 | Thành phần | Nội dung |
 |---|---|
